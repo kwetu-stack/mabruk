@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Receipt-X™</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='css/kwetu-theme.css') }}">
+
+</head>
+
+<body class="bg-light">
+
+<div class="container-fluid p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>ALASKAN SALES™</h2>
+
+            <h5 class="text-muted">Receipt-X™</h5>
+
+        </div>
+
+        <div>
+
+            <a href="{{ url_for('dashboard.home') }}"
+   class="btn btn-secondary">
+
+         </a>
+
+    </div>
+
+    <div class="text-end">
+
+    <table class="table table-borderless table-sm mb-0">
+
+        <tr>
+            <td><strong>Receipt No</strong></td>
+            <td class="text-primary">
+                {{ receipt.receipt_number }}
+            </td>
+        </tr>
+
+        <tr>
+            <td><strong>Date</strong></td>
+            <td>
+                {{ receipt.receipt_date.strftime('%d %b %Y %H:%M') }}
+            </td>
+        </tr>
+
+        <tr>
+            <td><strong>User</strong></td>
+            <td>
+                {{ current_user.full_name }}
+            </td>
+        </tr>
+
+    </table>
+
+</div>
+
+</div>
+
+<!-- CUSTOMER -->
+<div class="card mb-4">
+
+    <div class="card-header">
+        Customer
+    </div>
+
+    <div class="card-body">
+
+        <input
+            type="text"
+            name="customer_name"
+            id="customer_name"
+            class="form-control"
+            value="{{ receipt.customer_name }}"
+            placeholder="Enter customer name (e.g., Abuu Shop)">
+
+    </div>
+
+</div>
+
+<!-- PRODUCT ENTRY (AJAX) -->
+<div class="card mb-4">
+
+    <div class="card-header">
+        Add Product
+    </div>
+
+    <div class="card-body">
+
+        <div class="row">
+
+            <!-- PRODUCT -->
+            <div class="col-md-5" style="position: relative;">
+
+                <label class="form-label">Search Product</label>
+
+                <input
+                    id="product_search"
+                    type="text"
+                    class="form-control"
+                    placeholder="Start typing to search products..."
+                    autocomplete="off"
+                    required>
+
+                <input
+                    type="hidden"
+                    id="product_id"
+                    name="product_id">
+
+                <div
+                    id="product_suggestions"
+                    class="list-group"
+                    style="position:absolute; z-index:2000; display:none; max-height:200px; overflow:auto; width:100%;">
+                </div>
+
+            </div>
+
+            <!-- QTY -->
+            <div class="col-md-2">
+
+                <label class="form-label">Qty</label>
+
+                <input
+                    id="quantity"
+                    type="number"
+                    class="form-control"
+                    step="0.01"
+                    required>
+
+            </div>
+
+            <!-- PRICE -->
+            <div class="col-md-2">
+
+                <label class="form-label">Price</label>
+
+                <input
+                    id="unit_price"
+                    type="number"
+                    class="form-control"
+                    step="0.01"
+                    required>
+
+            </div>
+
+            <!-- BUTTON -->
+            <div class="col-md-2 d-grid">
+
+                <label>&nbsp;</label>
+
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    onclick="addItem()">
+
+                    ADD ITEM
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ITEMS TABLE -->
+<div class="card mb-4">
+
+    <div class="card-header">
+        Receipt Items
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-bordered table-hover">
+
+            <thead class="table-dark">
+
+            <tr>
+                <th>#</th>
+                <th>Product</th>
+                <th width="120">Qty</th>
+                <th width="150">Price</th>
+                <th width="150">Total</th>
+                <th width="100">Action</th>
+            </tr>
+
+            </thead>
+
+            <tbody id="itemsTable">
+
+                {% if items %}
+
+                    {% for item in items %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ item.product.display_name }}</td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td>{{ item.unit_price }}</td>
+
+                        <td>{{ item.total }}</td>
+
+                        <td>
+                            <button class="btn btn-sm btn-danger">
+                                ❌
+                            </button>
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">
+                            No products added.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<!-- TOTAL -->
+<div class="row">
+
+    <div class="col">
+        <h3>Grand Total</h3>
+    </div>
+
+    <div class="col text-end">
+        <h2 class="text-success">
+            KES {{ "%.2f"|format(total) }}
+        </h2>
+    </div>
+
+</div>
+
+<hr>
+
+<!-- ACTIONS -->
+<div class="d-flex justify-content-between">
+
+    <a href="{{ url_for('receipts.new_receipt') }}"
+       class="btn btn-secondary btn-lg">
+
+        New Receipt
+
+    </a>
+
+    <form method="POST"
+          action="{{ url_for('receipts.save_receipt') }}">
+
+        <input
+    type="hidden"
+    id="hidden_customer_name"
+    name="customer_name">
+
+        <button
+            type="submit"
+            class="btn btn-success btn-lg">
+
+            Save Receipt
+
+        </button>
+
+    </form>
+
+</div>
+
+
+<!-- AJAX + Autocomplete SCRIPT -->
+<script>
+// Serialize products into a plain JS array
+const PRODUCTS = [
+    {% for p in products %}
+    { id: {{ p.id }}, display_name: {{ p.display_name|tojson }}, selling_price: {{ p.selling_price }} }{{ "," if not loop.last }}
+    {% endfor %}
+];
+
+// Elements
+const searchInput = document.getElementById('product_search');
+const suggestions = document.getElementById('product_suggestions');
+const hiddenProductId = document.getElementById('product_id');
+const unitPriceInput = document.getElementById('unit_price');
+
+function showSuggestions(items) {
+    suggestions.innerHTML = '';
+    if (!items.length) {
+        suggestions.style.display = 'none';
+        return;
+    }
+    items.forEach(p => {
+        const el = document.createElement('button');
+        el.type = 'button';
+        el.className = 'list-group-item list-group-item-action';
+        el.textContent = p.display_name;
+        el.dataset.id = p.id;
+        el.dataset.price = p.selling_price;
+        el.addEventListener('click', () => selectProduct(p));
+        suggestions.appendChild(el);
+    });
+    suggestions.style.display = 'block';
+}
+
+function selectProduct(p) {
+    hiddenProductId.value = p.id;
+    searchInput.value = p.display_name;
+    unitPriceInput.value = p.selling_price;
+    suggestions.style.display = 'none';
+}
+
+function filterProducts(query) {
+    const q = (query || '').toLowerCase().trim();
+    if (!q) return [];
+    return PRODUCTS.filter(p => p.display_name.toLowerCase().includes(q)).slice(0, 20);
+}
+
+searchInput.addEventListener('input', (e) => {
+    const q = e.target.value;
+    if (!q) {
+        suggestions.style.display = 'none';
+        hiddenProductId.value = '';
+        return;
+    }
+    const matches = filterProducts(q);
+    showSuggestions(matches);
+});
+
+searchInput.addEventListener('focus', (e) => {
+    const q = e.target.value;
+    if (!q) return;
+    const matches = filterProducts(q);
+    showSuggestions(matches);
+});
+
+// Click outside to close suggestions
+document.addEventListener('click', (e) => {
+    if (!suggestions.contains(e.target) && e.target !== searchInput) {
+        suggestions.style.display = 'none';
+    }
+});
+
+async function addItem() {
+    const product_id = document.getElementById('product_id').value;
+    const quantity = document.getElementById('quantity').value;
+    const unit_price = document.getElementById('unit_price').value;
+
+    if (!product_id) {
+        alert('Please select a product from suggestions.');
+        return;
+    }
+
+    const response = await fetch('/receipts/api/add-item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            customer_name: document.getElementById('customer_name').value,
+            product_id,
+            quantity,
+            unit_price
+        })
+    });
+
+    const data = await response.json();
+    if (data.success) {
+        location.reload();
+    } else {
+        alert('Failed to add item');
+    }
+}
+
+// Save form customer name
+const saveForm = document.querySelector('form[action$="/save"]');
+saveForm.addEventListener('submit', function () {
+    document.getElementById('hidden_customer_name').value = document.getElementById('customer_name').value;
+});
+
+// If there is an initial product id set (unlikely) update price
+function updatePrice() {
+    const id = hiddenProductId.value;
+    if (!id) return;
+    const p = PRODUCTS.find(x => String(x.id) === String(id));
+    if (p) unitPriceInput.value = p.selling_price;
+}
+
+updatePrice();
+
+</script>

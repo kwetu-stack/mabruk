@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+
+    <title>
+        {% block title %}
+        ALASKAN SALES™
+        {% endblock %}
+    </title>
+
+    <!-- Bootstrap -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- Kwetu Theme -->
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/kwetu-theme.css') }}">
+
+</head>
+
+<body>
+
+<!-- ====================================== -->
+<!-- NAVIGATION -->
+<!-- ====================================== -->
+
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm"
+     style="background: var(--kwetu-navy);">
+
+    <div class="container-fluid">
+
+        <!-- Brand -->
+
+        <a class="navbar-brand" href="{{ url_for('dashboard.home') }}">
+
+            <div class="fw-bold fs-4">
+
+                ALASKAN SALES™
+
+            </div>
+
+            <small style="color: var(--kwetu-gold);">
+
+                Receipt-X™ Professional
+
+            </small>
+
+        </a>
+
+        <!-- Mobile Toggle -->
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#mainNavbar">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+        <!-- Menu -->
+
+        <div class="collapse navbar-collapse"
+             id="mainNavbar">
+
+            <ul class="navbar-nav ms-5">
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{{ url_for('dashboard.home') }}">
+
+                        Dashboard
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{{ url_for('products.index') }}">
+
+                        Products
+
+                    </a>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{{ url_for('receipts.new_receipt') }}">
+
+                        New Receipt
+
+                    </a>
+
+                </li>
+
+                
+
+            </ul>
+
+            <!-- Right Side -->
+
+            <ul class="navbar-nav ms-auto align-items-center">
+
+                {% if current_user.is_authenticated %}
+
+                <li class="nav-item me-3 text-white">
+
+                    👤
+
+                    <strong>
+
+                        {{ current_user.full_name }}
+
+                    </strong>
+
+                </li>
+
+                <li class="nav-item">
+
+                    <a
+                        class="btn btn-outline-light btn-sm"
+                        href="{{ url_for('auth.logout') }}">
+
+                        Logout
+
+                    </a>
+
+                </li>
+
+                {% endif %}
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</nav>
+
+<!-- ====================================== -->
+<!-- PAGE -->
+<!-- ====================================== -->
+
+<div class="container py-4">
+
+    {% block content %}
+
+    {% endblock %}
+
+</div>
+
+<!-- ====================================== -->
+<!-- FOOTER -->
+<!-- ====================================== -->
+
+<footer class="text-center mt-5 mb-4">
+
+    <hr>
+
+    <p class="mb-1">
+
+        <strong>
+
+            ALASKAN SALES™
+
+        </strong>
+
+    </p>
+
+    <small class="text-muted">
+
+        Powered by
+
+        <strong>KWETU PARTNERS LTD</strong>
+
+    </small>
+
+    <br>
+
+    <small class="text-muted">
+
+        Receipt-X™ Professional Edition
+
+    </small>
+
+</footer>
+
+<script
+src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js">
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Receipt {{ receipt.receipt_number }}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/kwetu-theme.css') }}">
+
+    <style>
+
+        body {
+            background: white;
+        }
+
+        .container {
+            max-width: 800px;
+        }
+
+        @media print {
+
+            .no-print {
+                display: none !important;
+            }
+
+            .card {
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            body {
+                margin: 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+
+        <div class="card-header no-print">
+
+            <h3 class="mb-0">Sales Receipt</h3>
+
+        </div>
+
+        <div class="card-body">
+
+            <!-- COMPANY -->
+
+            <div class="text-center mb-4">
+
+                <h2 class="mb-1">MABROUK SHOP ALASKAN</h2>
+
+                <p class="mb-0 text-muted">
+                    Malindi, Kenya
+                </p>
+
+                <p class="mb-0 text-muted">
+                    Tel: 0713 866 027
+                </p>
+
+            </div>
+
+            <hr>
+
+            <!-- RECEIPT INFORMATION -->
+
+            <div class="row mb-4">
+
+                <div class="col-md-6">
+
+                    <p class="mb-1">
+                        <strong>Receipt No:</strong>
+                        {{ receipt.receipt_number }}
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Customer:</strong>
+                        {{ receipt.customer_name or "Walk-in Customer" }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Sold By:</strong>
+                        {{ receipt.user.full_name }}
+                    </p>
+
+                </div>
+
+                <div class="col-md-6 text-md-end">
+
+                    <p class="mb-1">
+                        <strong>Date:</strong>
+                        {{ receipt.receipt_date.strftime('%d %b %Y %H:%M') }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Status:</strong>
+                        {{ receipt.status }}
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- ITEMS -->
+
+            <table class="table table-bordered">
+
+                <thead class="table-dark">
+
+                    <tr>
+
+                        <th width="60">#</th>
+                        <th>Product</th>
+                        <th width="100">Qty</th>
+                        <th width="120">Price</th>
+                        <th width="140">Total</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                {% for item in items %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>{{ item.product.display_name }}</td>
+
+                        <td>{{ item.quantity }}</td>
+
+                        <td>{{ "%.0f"|format(item.unit_price) }}</td>
+
+                        <td>{{ "%.0f"|format(item.total) }}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+                </tbody>
+
+            </table>
+
+            <hr>
+
+            <!-- VAT SUMMARY -->
+
+            <div class="row">
+
+                <div class="col-md-6 ms-auto">
+
+                    <table class="table table-bordered">
+
+                        <tr>
+
+                            <th>VATable Sales</th>
+
+                            <td class="text-end">
+
+                                KES {{ "%.0f"|format(net_sales) }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <th>VAT</th>
+
+                            <td class="text-end">
+
+                                KES {{ "%.0f"|format(total_vat) }}
+
+                            </td>
+
+                        </tr>
+
+                        <tr class="table-success">
+
+                            <th>Grand Total</th>
+
+                            <th class="text-end">
+
+                                KES {{ "%.0f"|format(gross_sales) }}
+
+                            </th>
+
+                        </tr>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <hr>
+
+            <div class="text-center mt-4">
+
+                <p class="mb-0">
+                    Thank you for your business.
+                </p>
+
+                <small class="text-muted">
+                    Powered by ALASKAN SALES™ Receipt-X
+                </small>
+
+            </div>
+
+            <!-- ACTIONS -->
+
+            <div class="d-flex justify-content-between mt-4 no-print">
+
+                <div>
+
+                    <a href="{{ url_for('dashboard.home') }}"
+                       class="btn btn-secondary">
+
+                        ← Dashboard
+
+                    </a>
+
+                    <a href="{{ url_for('receipts.new_receipt') }}"
+                       class="btn btn-primary">
+
+                        New Receipt
+
+                    </a>
+
+                </div>
+
+                <button
+                    class="btn btn-success"
+                    onclick="window.print();">
+
+                    Print Receipt
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+window.addEventListener("load", function () {
+
+    setTimeout(function () {
+
+        window.print();
+
+    }, 300);
+
+});
+
+</script>
+
+</body>
+
+</html>

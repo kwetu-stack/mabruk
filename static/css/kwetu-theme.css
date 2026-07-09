@@ -1,0 +1,247 @@
+/* ==========================================
+   KWETU PARTNERS™ DESIGN SYSTEM
+   Version: 1.0
+========================================== */
+
+:root{
+
+    /* Brand */
+
+    --kwetu-navy:#0B1F3A;
+    --kwetu-gold:#C9A227;
+
+    /* Neutral */
+
+    --kwetu-light:#F7F8FA;
+    --kwetu-white:#FFFFFF;
+
+    /* Status */
+
+    --kwetu-success:#198754;
+    --kwetu-danger:#DC3545;
+    --kwetu-warning:#FFC107;
+
+    /* Text */
+
+    --kwetu-text:#212529;
+}
+
+
+/* ------------------------------------------
+   GENERAL
+------------------------------------------ */
+
+body{
+
+    background:var(--kwetu-light);
+    color:var(--kwetu-text);
+
+}
+
+
+/* ------------------------------------------
+   CARDS
+------------------------------------------ */
+
+.card{
+
+    border-radius:10px;
+    border:none;
+
+    box-shadow:
+        0 4px 10px rgba(0,0,0,.08);
+
+}
+
+
+/* ------------------------------------------
+   CARD HEADERS
+------------------------------------------ */
+
+.card-header{
+
+    background:var(--kwetu-navy);
+    color:white;
+
+    font-weight:700;
+    letter-spacing:.5px;
+
+}
+
+/* ------------------------------------------
+   PRIMARY BUTTON
+------------------------------------------ */
+
+.btn-primary{
+
+    background:var(--kwetu-navy);
+    border-color:var(--kwetu-navy);
+
+}
+
+.btn-primary:hover{
+
+    background:#14335f;
+    border-color:#14335f;
+
+}
+
+
+/* ------------------------------------------
+   SUCCESS
+------------------------------------------ */
+
+.btn-success{
+
+    background:var(--kwetu-success);
+
+}
+
+
+/* ------------------------------------------
+   TABLES
+------------------------------------------ */
+
+.table-dark{
+
+    background:var(--kwetu-navy);
+
+}
+
+
+/* ------------------------------------------
+   GRAND TOTAL
+------------------------------------------ */
+
+.text-success{
+
+    color:var(--kwetu-gold)!important;
+
+}
+
+
+/* ------------------------------------------
+   LINKS
+------------------------------------------ */
+
+a{
+
+    text-decoration:none;
+
+}
+/* ------------------------------------------
+   COMPANY TITLE
+------------------------------------------ */
+
+.company-title{
+
+    color:var(--kwetu-navy);
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+}
+
+.company-subtitle{
+
+    color:var(--kwetu-gold);
+
+    font-weight:600;
+
+}
+
+
+/* ------------------------------------------
+   RECEIPT TOTAL
+------------------------------------------ */
+
+.grand-total{
+
+    color:var(--kwetu-gold);
+
+    font-weight:700;
+
+}
+/* ==========================================
+   NAVBAR
+========================================== */
+
+.navbar{
+
+    background:var(--kwetu-navy)!important;
+
+}
+
+.navbar-brand{
+
+    color:white!important;
+
+    font-weight:700;
+
+}
+
+.navbar-brand small{
+
+    color:var(--kwetu-gold);
+
+}
+
+.navbar .nav-link{
+
+    color:white!important;
+
+    font-weight:600;
+
+    margin-left:10px;
+
+}
+
+.navbar .nav-link:hover{
+
+    color:var(--kwetu-gold)!important;
+
+}
+
+
+/* ==========================================
+   DASHBOARD
+========================================== */
+
+.dashboard-card{
+
+    border:none;
+
+    border-radius:12px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+
+    transition:.25s;
+
+}
+
+.dashboard-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.dashboard-icon{
+
+    font-size:42px;
+
+}
+
+.dashboard-title{
+
+    color:var(--kwetu-navy);
+
+    font-weight:700;
+
+}
+
+.dashboard-subtitle{
+
+    color:#666;
+
+}

@@ -28,10 +28,9 @@ def seed_initial_products(app):
             return
 
         product_master_path = os.path.join(
-            app.root_path,
-            "PRODUCT_MASTER",
-            "RECEIPT-X_PRODUCT_MASTER.xlsx",
-        )
+    app.root_path,
+    "RECEIPT-X_PRODUCT_MASTER.xlsx",
+)
 
         if not os.path.exists(product_master_path):
             app.logger.warning(

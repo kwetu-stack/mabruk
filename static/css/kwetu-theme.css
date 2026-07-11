@@ -244,4 +244,204 @@ a{
 
     color:#666;
 
+}/* ==========================================
+   KWETU DESIGN SYSTEM v2.0
+========================================== */
+
+
+/* ------------------------------------------
+   LOGIN PAGE
+------------------------------------------ */
+
+body.kwetu-login{
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--kwetu-navy),
+            #153d72
+        );
+
+}
+
+
+/* ------------------------------------------
+   LOGIN CARD
+------------------------------------------ */
+
+body.kwetu-login .card{
+
+    border-radius:16px;
+
+    overflow:hidden;
+
+}
+
+
+/* ------------------------------------------
+   INPUTS
+------------------------------------------ */
+
+.form-control{
+
+    border-radius:8px;
+
+    border:1px solid #d8dce2;
+
+    padding:.70rem .85rem;
+
+}
+
+.form-control:focus{
+
+    border-color:var(--kwetu-gold);
+
+    box-shadow:
+        0 0 0 .15rem rgba(201,162,39,.20);
+
+}
+
+
+/* ------------------------------------------
+   KWETU PRIMARY BUTTON
+------------------------------------------ */
+
+.btn-kwetu-primary{
+
+    background:var(--kwetu-navy);
+
+    border:1px solid var(--kwetu-navy);
+
+    color:white;
+
+    font-weight:600;
+
+}
+
+.btn-kwetu-primary:hover{
+
+    background:#14335f;
+
+    border-color:#14335f;
+
+    color:white;
+
+}
+
+
+/* ------------------------------------------
+   NAVBAR IMPROVEMENTS
+------------------------------------------ */
+
+.navbar{
+
+    padding-top:.80rem;
+
+    padding-bottom:.80rem;
+
+}
+
+.navbar-brand{
+
+    line-height:1.2;
+
+}
+
+.navbar .nav-link{
+
+    padding-left:14px;
+
+    padding-right:14px;
+
+    border-radius:6px;
+
+    transition:.25s;
+
+}
+
+.navbar .nav-link:hover{
+
+    background:rgba(255,255,255,.08);
+
+}
+
+
+/* ------------------------------------------
+   PAGE TITLE
+------------------------------------------ */
+
+.page-title{
+
+    color:var(--kwetu-navy);
+
+    font-weight:700;
+
+}
+
+
+/* ------------------------------------------
+   TABLES
+------------------------------------------ */
+
+.table{
+
+    vertical-align:middle;
+
+}
+
+.table-hover tbody tr:hover{
+
+    background:#f8fafc;
+
+}
+
+
+/* ------------------------------------------
+   BADGES
+------------------------------------------ */
+
+.badge{
+
+    font-size:.80rem;
+
+    padding:.45rem .65rem;
+
+}
+
+
+/* ------------------------------------------
+   FOOTER
+------------------------------------------ */
+
+footer{
+
+    color:#777;
+
+}
+
+footer hr{
+
+    opacity:.15;
+
+}
+
+
+/* ------------------------------------------
+   MOBILE
+------------------------------------------ */
+
+@media (max-width:768px){
+
+    .navbar-brand{
+
+        font-size:1rem;
+
+    }
+
+    .navbar-brand small{
+
+        display:block;
+
+    }
+
 }

@@ -8,7 +8,11 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1">
 
-    <title>ALASKAN SALES™ Login</title>
+    <title>
+
+        ALASKAN SALES™ Login
+
+    </title>
 
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -20,7 +24,7 @@
 
 </head>
 
-<body>
+<body class="kwetu-login">
 
 <div class="container">
 
@@ -29,31 +33,31 @@
 
         <div class="col-lg-4 col-md-6">
 
-            <div class="card shadow-lg">
+            <div class="card shadow-lg border-0">
 
-                <div class="card-header text-center">
+                <div class="card-body p-5">
 
-                    <h3 class="mb-0">
+                    <div class="text-center mb-4">
 
-                        ALASKAN SALES™
+                        <h2 class="fw-bold">
 
-                    </h3>
+                            ALASKAN SALES™
 
-                </div>
+                        </h2>
 
-                <div class="card-body p-4">
+                        <h5 class="company-subtitle">
 
-                    <h5 class="company-subtitle text-center mb-1">
+                            Receipt-X™ Professional POS
 
-                        Receipt-X™
+                        </h5>
 
-                    </h5>
+                        <p class="text-muted mb-0">
 
-                    <p class="text-center text-muted mb-4">
+                            Secure Point of Sale System
 
-                        Secure Point of Sale System
+                        </p>
 
-                    </p>
+                    </div>
 
                     {% with messages = get_flashed_messages(with_categories=true) %}
 
@@ -111,7 +115,7 @@
 
                         <button
                             type="submit"
-                            class="btn btn-primary w-100">
+                            class="btn btn-kwetu-primary w-100">
 
                             Sign In
 
@@ -121,7 +125,7 @@
 
                 </div>
 
-                <div class="card-footer text-center">
+                <div class="card-footer text-center bg-white border-0 pb-4">
 
                     <small class="text-muted">
 

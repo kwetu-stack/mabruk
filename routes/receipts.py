@@ -255,7 +255,39 @@ def save_receipt():
             receipt_id=receipt.id,
         )
     )
+# ----------------------------
+# PRINT RECEIPT
+# ----------------------------
+@receipts_bp.route("/print/<int:receipt_id>")
+@login_required
+def print_receipt(receipt_id):
 
+    receipt = Receipt.query.get_or_404(
+        receipt_id
+    )
+
+    items = ReceiptItem.query.filter_by(
+        receipt_id=receipt.id
+    ).all()
+
+    gross_sales = sum(
+        item.total for item in items
+    )
+
+    total_vat = sum(
+        item.vat_amount for item in items
+    )
+
+    net_sales = gross_sales - total_vat
+
+    return render_template(
+        "receipts/print.html",
+        receipt=receipt,
+        items=items,
+        gross_sales=gross_sales,
+        net_sales=net_sales,
+        total_vat=total_vat,
+    )
 
 # ----------------------------
 # VIEW RECEIPT
@@ -293,35 +325,20 @@ def view_receipt(receipt_id):
 
 
 # ----------------------------
-# PRINT RECEIPT
+# RECEIPT HISTORY
 # ----------------------------
-@receipts_bp.route("/print/<int:receipt_id>")
+@receipts_bp.route("/")
 @login_required
-def print_receipt(receipt_id):
+def history():
 
-    receipt = Receipt.query.get_or_404(
-        receipt_id
-    )
-
-    items = ReceiptItem.query.filter_by(
-        receipt_id=receipt.id
-    ).all()
-
-    gross_sales = sum(
-        item.total for item in items
-    )
-
-    total_vat = sum(
-        item.vat_amount for item in items
-    )
-
-    net_sales = gross_sales - total_vat
+    receipts = (
+    Receipt.query
+    .filter_by(status="SAVED")
+    .order_by(Receipt.id.desc())
+    .all()
+)
 
     return render_template(
-        "receipts/print.html",
-        receipt=receipt,
-        items=items,
-        gross_sales=gross_sales,
-        net_sales=net_sales,
-        total_vat=total_vat,
+        "receipts/history.html",
+        receipts=receipts,
     )

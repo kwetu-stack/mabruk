@@ -8,75 +8,61 @@ ALASKAN SALES™ Dashboard
 
 <div class="text-center mb-5">
 
-    <h1 class="display-5 fw-bold">
+    <h1 class="display-5 fw-bold company-title">
+
         ALASKAN SALES™
+
     </h1>
 
-    <h3 class="text-muted">
-        Receipt-X™ Training Version
-    </h3>
+    <h4 class="company-subtitle">
 
-    <p class="mt-3">
-        Welcome to the ALASKAN SALES™ Receipt-X Point of Sale System.
+        Receipt-X™ Professional POS
+
+    </h4>
+
+    <p class="mt-3 text-muted">
+
+        Welcome,
+
+        <strong>{{ current_user.full_name }}</strong>
+
     </p>
 
 </div>
 
 <div class="row g-4">
 
-    <div class="col-lg-4">
-
-        <div class="card kwetu-card h-100">
-
-            <div class="card-body text-center">
-
-                <h3>
-                    📦
-                </h3>
-
-                <h4 class="mt-3">
-                    Product Master
-                </h4>
-
-                <p class="text-muted">
-                    Browse all imported supplier products.
-                </p>
-
-                <a
-                    href="{{ url_for('products.index') }}"
-                    class="btn btn-kwetu-primary">
-
-                    View Products
-
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
+    <!-- ================================= -->
+    <!-- NEW RECEIPT -->
+    <!-- ================================= -->
 
     <div class="col-lg-4">
 
-        <div class="card kwetu-card h-100">
+        <div class="card dashboard-card h-100">
 
             <div class="card-body text-center">
 
-                <h3>
+                <div class="dashboard-icon">
+
                     🧾
-                </h3>
 
-                <h4 class="mt-3">
-                    Receipt-X™
+                </div>
+
+                <h4 class="dashboard-title mt-3">
+
+                    New Receipt
+
                 </h4>
 
-                <p class="text-muted">
-                    Create a new customer sales receipt.
+                <p class="dashboard-subtitle">
+
+                    Start a new customer sale.
+
                 </p>
 
                 <a
                     href="{{ url_for('receipts.new_receipt') }}"
-                    class="btn btn-success">
+                    class="btn btn-kwetu-primary">
 
                     New Receipt
 
@@ -88,37 +74,93 @@ ALASKAN SALES™ Dashboard
 
     </div>
 
+    <!-- ================================= -->
+    <!-- RECEIPT HISTORY -->
+    <!-- ================================= -->
+
     <div class="col-lg-4">
 
-        <div class="card kwetu-card h-100">
+        <div class="card dashboard-card h-100">
 
-            
+            <div class="card-body text-center">
+
+                <div class="dashboard-icon">
+
+                    📑
+
+                </div>
+
+                <h4 class="dashboard-title mt-3">
+
+                    Receipt History
+
+                </h4>
+
+                <p class="dashboard-subtitle">
+
+                    View and reprint saved receipts.
+
+                </p>
+
+                <a
+                    href="{{ url_for('receipts.history') }}"
+                    class="btn btn-kwetu-primary">
+
+                    Receipt History
+
+                </a>
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+    <!-- ================================= -->
+    <!-- PRODUCT MASTER (ADMIN ONLY) -->
+    <!-- ================================= -->
 
-<hr class="my-5">
+    {% if current_user.role == "ADMIN" %}
 
-<div class="alert alert-info">
+    <div class="col-lg-4">
 
-    <strong>Current Development Status</strong>
+        <div class="card dashboard-card h-100">
 
-    <ul class="mb-0 mt-2">
+            <div class="card-body text-center">
 
-        <li>✅ Receipt-X POS operational</li>
+                <div class="dashboard-icon">
 
-        <li>✅ Product Master imported</li>
+                    📦
 
-        <li>✅ User authentication & roles implemented</li>
+                </div>
 
-        <li>✅ Professional receipt printing</li>
+                <h4 class="dashboard-title mt-3">
 
-        <li>🚧 Supplier master expansion in progress</li>
+                    Product Master
 
-    </ul>
+                </h4>
+
+                <p class="dashboard-subtitle">
+
+                    Browse imported supplier products.
+
+                </p>
+
+                <a
+                    href="{{ url_for('products.index') }}"
+                    class="btn btn-kwetu-primary">
+
+                    Product Master
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    {% endif %}
 
 </div>
 

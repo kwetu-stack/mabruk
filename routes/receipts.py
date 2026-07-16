@@ -26,6 +26,28 @@ receipts_bp = Blueprint(
 DEFAULT_RECEIPT_CUSTOMER_NAME = "MABROUK SHOP ALASKAN"
 
 
+def calculate_receipt_item_amounts(product, quantity, unit_price):
+    vat_rate = 0
+    vat_amount = 0
+    total = quantity * unit_price
+
+    if product and product.vat_enabled:
+
+        vat_rate = product.vat_rate
+
+        vat_amount = total - (
+            total / (1 + (vat_rate / 100))
+        )
+
+    return vat_rate, vat_amount, total
+
+
+def update_receipt_total(receipt):
+    receipt.total_amount = sum(
+        item.total for item in receipt.items
+    )
+
+
 # ----------------------------
 # MAIN SCREEN
 # ----------------------------
@@ -91,20 +113,11 @@ def add_item():
 
     product = db.session.get(Product, product_id)
 
-    vat_rate = 0
-    vat_amount = 0
-
-    if product and product.vat_enabled:
-
-        vat_rate = product.vat_rate
-
-        line_total = quantity * unit_price
-
-        vat_amount = line_total - (
-            line_total / (1 + (vat_rate / 100))
-        )
-
-    total = quantity * unit_price
+    vat_rate, vat_amount, total = calculate_receipt_item_amounts(
+        product,
+        quantity,
+        unit_price,
+    )
 
     item = ReceiptItem(
         receipt_id=receipt_id,
@@ -121,9 +134,7 @@ def add_item():
 
     receipt = db.session.get(Receipt, receipt_id)
 
-    receipt.total_amount = sum(
-        i.total for i in receipt.items
-    )
+    update_receipt_total(receipt)
 
     db.session.commit()
 
@@ -159,20 +170,11 @@ def api_add_item():
 
     product = db.session.get(Product, product_id)
 
-    vat_rate = 0
-    vat_amount = 0
-
-    if product and product.vat_enabled:
-
-        vat_rate = product.vat_rate
-
-        line_total = quantity * unit_price
-
-        vat_amount = line_total - (
-            line_total / (1 + (vat_rate / 100))
-        )
-
-    total = quantity * unit_price
+    vat_rate, vat_amount, total = calculate_receipt_item_amounts(
+        product,
+        quantity,
+        unit_price,
+    )
 
     item = ReceiptItem(
         receipt_id=receipt_id,
@@ -194,9 +196,84 @@ def api_add_item():
 
     receipt.customer_name = customer_name
 
-    receipt.total_amount = sum(
-        i.total for i in receipt.items
+    update_receipt_total(receipt)
+
+    db.session.commit()
+
+    return jsonify(
+        {
+            "success": True,
+            "item": {
+                "id": item.id,
+                "product": item.product.display_name,
+                "quantity": item.quantity,
+                "unit_price": item.unit_price,
+                "vat_rate": item.vat_rate,
+                "vat_amount": item.vat_amount,
+                "total": item.total,
+            },
+            "grand_total": receipt.total_amount,
+        }
     )
+
+
+# ----------------------------
+# AJAX UPDATE ITEM
+# ----------------------------
+@receipts_bp.route("/api/update-item/<int:item_id>", methods=["POST"])
+@login_required
+def api_update_item(item_id):
+
+    if "receipt_id" not in session:
+        return jsonify(
+            {"error": "No active receipt"}
+        ), 400
+
+    receipt_id = session["receipt_id"]
+
+    item = ReceiptItem.query.filter_by(
+        id=item_id,
+        receipt_id=receipt_id,
+    ).first()
+
+    if item is None:
+        return jsonify(
+            {"error": "Item not found"}
+        ), 404
+
+    data = request.get_json()
+
+    customer_name = data.get(
+        "customer_name",
+        "Walk-in Customer",
+    )
+
+    product_id = int(data["product_id"])
+    quantity = float(data["quantity"])
+    unit_price = float(data["unit_price"])
+
+    product = db.session.get(Product, product_id)
+
+    vat_rate, vat_amount, total = calculate_receipt_item_amounts(
+        product,
+        quantity,
+        unit_price,
+    )
+
+    item.product_id = product_id
+    item.quantity = quantity
+    item.unit_price = unit_price
+    item.vat_rate = vat_rate
+    item.vat_amount = vat_amount
+    item.total = total
+
+    receipt = db.session.get(
+        Receipt,
+        receipt_id,
+    )
+
+    receipt.customer_name = customer_name
+    update_receipt_total(receipt)
 
     db.session.commit()
 

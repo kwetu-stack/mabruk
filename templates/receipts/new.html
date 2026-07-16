@@ -170,6 +170,7 @@ New Receipt
                 <label>&nbsp;</label>
 
                 <button
+                    id="item_submit_button"
                     type="button"
                     class="btn btn-primary"
                     onclick="addItem()">
@@ -216,7 +217,12 @@ New Receipt
 
                     {% for item in items %}
 
-                    <tr>
+                    <tr
+                        data-item-id="{{ item.id }}"
+                        data-product-id="{{ item.product_id }}"
+                        data-product-name="{{ item.product.display_name }}"
+                        data-quantity="{{ item.quantity }}"
+                        data-unit-price="{{ item.unit_price }}">
 
                         <td>{{ loop.index }}</td>
 
@@ -229,8 +235,11 @@ New Receipt
                         <td>{{ item.total }}</td>
 
                         <td>
-                            <button class="btn btn-sm btn-danger">
-                                ❌
+                            <button
+                                type="button"
+                                class="btn btn-sm btn-outline-primary edit-item-button"
+                                onclick="editItem(this)">
+                                Edit
                             </button>
                         </td>
 
@@ -319,6 +328,13 @@ const searchInput = document.getElementById('product_search');
 const suggestions = document.getElementById('product_suggestions');
 const hiddenProductId = document.getElementById('product_id');
 const unitPriceInput = document.getElementById('unit_price');
+const quantityInput = document.getElementById('quantity');
+const itemSubmitButton = document.getElementById('item_submit_button');
+let editingItemId = null;
+
+document.querySelectorAll('.edit-item-button').forEach((button) => {
+    button.textContent = 'Edit';
+});
 
 function showSuggestions(items) {
     suggestions.innerHTML = '';
@@ -387,7 +403,11 @@ async function addItem() {
         return;
     }
 
-    const response = await fetch('/receipts/api/add-item', {
+    const url = editingItemId
+        ? `/receipts/api/update-item/${editingItemId}`
+        : '/receipts/api/add-item';
+
+    const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -402,8 +422,23 @@ async function addItem() {
     if (data.success) {
         location.reload();
     } else {
-        alert('Failed to add item');
+        alert('Failed to save item');
     }
+}
+
+function editItem(button) {
+    const row = button.closest('tr');
+
+    editingItemId = row.dataset.itemId;
+    hiddenProductId.value = row.dataset.productId;
+    searchInput.value = row.dataset.productName;
+    quantityInput.value = row.dataset.quantity;
+    unitPriceInput.value = row.dataset.unitPrice;
+    itemSubmitButton.textContent = 'UPDATE ITEM';
+    itemSubmitButton.classList.remove('btn-primary');
+    itemSubmitButton.classList.add('btn-warning');
+    suggestions.style.display = 'none';
+    searchInput.focus();
 }
 
 // Save form customer name
